@@ -379,7 +379,11 @@ function extractPhrases(file, relativeFile, options = {}) {
   const HASHES = {};
   const source = fs.readFileSync(file, 'utf8');
   if (path.extname(file) !== '.html') {
-    const ast = _parse(source);
+    let parseSrc = source;
+    if (path.extname(file) === '.md') {
+      parseSrc = jsxtremeMarkdown.toComponentModule(source);
+    }
+    const ast = _parse(parseSrc);
     babelTraverse(ast, {
     // T / UT functions
       CallExpression({ node, scope }) {
